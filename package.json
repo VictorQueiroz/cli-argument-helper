@@ -14,9 +14,8 @@
     "typescript": "5.x"
   },
   "files": [
-    "*.js",
-    "*.d.ts",
-    "*.map"
+    "index.js",
+    "index.d.ts"
   ],
   "scripts": {
     "prepublishOnly": "npx tsc && yarn test",
