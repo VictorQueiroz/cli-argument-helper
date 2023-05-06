@@ -13,6 +13,11 @@
     "ts-node": "10.x",
     "typescript": "5.x"
   },
+  "files": [
+    "*.js",
+    "*.d.ts",
+    "*.map"
+  ],
   "scripts": {
     "prepublishOnly": "npx tsc && yarn test",
     "coverage": "npx nyc --exclude-node-modules yarn test",
