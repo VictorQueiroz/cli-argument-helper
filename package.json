@@ -1,0 +1,21 @@
+{
+  "name": "cli-argument-helper",
+  "version": "0.0.1",
+  "main": "./index.js",
+  "license": "MIT",
+  "devDependencies": {
+    "@istanbuljs/nyc-config-typescript": "^1.0.2",
+    "@types/chai": "4.x",
+    "@types/node": "18.x",
+    "chai": "4.x",
+    "nyc": "^15.1.0",
+    "sarg": "5.x",
+    "ts-node": "10.x",
+    "typescript": "5.x"
+  },
+  "scripts": {
+    "prepublishOnly": "npx tsc && yarn test",
+    "coverage": "npx nyc --exclude-node-modules yarn test",
+    "test": "npx sarg --require ts-node/register \"test/**/*.ts\" --ignore \"test/**/*.d.ts\""
+  }
+}
