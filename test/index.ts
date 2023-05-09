@@ -1,5 +1,6 @@
 import { Suite } from "sarg";
 import {
+  getArgument,
   getArgumentFromIndex,
   getInteger,
   getNamedArgument,
@@ -61,6 +62,16 @@ suite.test(
   }
 );
 
+suite.test(
+  "it should return not even remove the first argument in case validation fails",
+  () => {
+    const args = ["--a", "1", "--b", "2", "--user-id", "a"];
+    const argsCopy = [...args];
+    expect(getNamedArgument(args, "--user-id", getInteger)).to.be.equal(null);
+    expect(args).to.be.deep.equal(argsCopy);
+  }
+);
+
 suite.test("it should get string", () => {
   const args = ["--a", "1", "--b", "2", "--comment", "A B C"];
   const comment = getNamedArgument(args, "--comment", getString);
@@ -68,9 +79,21 @@ suite.test("it should get string", () => {
   expect(args).to.be.deep.equal(["--a", "1", "--b", "2"]);
 });
 
+  
 suite.test("it should return null in case no argument is found", () => {
   const args = ["--a", "1", "--b", "2", "--user-id", "3"];
   expect(getNamedArgument(args, "--post-id", getInteger)).to.be.null;
 });
+
+suite.test('getArgument: it should get argument without value', () => {
+  expect(getArgument(['--a'],'--a')).to.be.deep.equal({index: 0});
+  expect(getArgument(['--c','--a'],'--b')).to.be.null;
+})
+
+suite.test('getArgument: it should mutate argument list', () => {
+  const args = ['--a'];
+  expect(getArgument(args,'--a')).to.be.deep.equal({index: 0});
+  expect(args).to.be.deep.equal([]);
+})
 
 export default suite;

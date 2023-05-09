@@ -19,7 +19,7 @@
   ],
   "scripts": {
     "prepublishOnly": "npx tsc -b . --force && yarn test",
-    "coverage": "npx nyc --exclude-node-modules yarn test",
+    "test:coverage": "npx nyc yarn test",
     "test": "npx sarg --require ts-node/register \"test/**/*.ts\" --ignore \"test/**/*.d.ts\""
   }
 }
