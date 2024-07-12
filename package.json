@@ -16,8 +16,9 @@
     "typescript": "^5.5.3"
   },
   "files": [
-    "index.js",
-    "index.d.ts"
+    "**/*.js",
+    "**/*.d.ts.map",
+    "**/*.d.ts"
   ],
   "scripts": {
     "prepublishOnly": "npx tsc -b . --force && npm test",
