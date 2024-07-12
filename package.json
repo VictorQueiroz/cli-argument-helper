@@ -6,20 +6,26 @@
   "devDependencies": {
     "@istanbuljs/nyc-config-typescript": "^1.0.2",
     "@types/chai": "4.x",
-    "@types/node": "18.x",
+    "@types/chalk": "^2.2.0",
+    "@types/node": "^18.18.7",
     "chai": "4.x",
+    "eslint": "^8.52.0",
     "nyc": "^15.1.0",
-    "sarg": "5.x",
-    "ts-node": "10.x",
-    "typescript": "5.x"
+    "prettier": "^3.0.3",
+    "ts-node": "^10.9.1",
+    "typescript": "^5.5.3"
   },
   "files": [
     "index.js",
     "index.d.ts"
   ],
   "scripts": {
-    "prepublishOnly": "npx tsc -b . --force && yarn test",
-    "test:coverage": "npx nyc yarn test",
-    "test": "npx sarg --require ts-node/register \"test/**/*.ts\" --ignore \"test/**/*.d.ts\""
+    "prepublishOnly": "npx tsc -b . --force && npm test",
+    "test:coverage": "npx nyc npm test",
+    "test:watch": "TEST_ARGUMENTS=--watch npm run test",
+    "test": "node $TEST_ARGUMENTS --require ts-node/register --test test/index.ts"
+  },
+  "dependencies": {
+    "chalk": "^4.1.2"
   }
 }
