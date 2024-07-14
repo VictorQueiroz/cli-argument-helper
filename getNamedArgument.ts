@@ -25,7 +25,9 @@ export default function getNamedArgument<T>(
       if (
         current
           .substring(argumentName.length)
-          .startsWith(Character.ArgumentAssignmentOperator)
+          .startsWith(Character.ArgumentAssignmentOperator) &&
+        current.substring(0, argumentName.length) === argumentName
+        // && current.length > argumentName.length + Character.ArgumentAssignmentOperator.length
       ) {
         const arg = current.substring(0, argumentName.length);
         const parsedValue = current.substring(

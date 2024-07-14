@@ -179,4 +179,31 @@ describe("getNamedArgument", () => {
     expect(getNamedArgument(args, "--user.id", getInteger)).to.be.equal(-1);
     expect(args).to.be.deep.equal([]);
   });
+
+  it('should be able to get "color=c=black:s=1280x720" value from "-f lavfi -i color=c=black:s=1280x720" argument stream', () => {
+    const args = ["-f", "lavfi", "-i", "color=c=black:s=1280x720"];
+    expect(getNamedArgument(args, "-f", getString)).to.be.equal("lavfi");
+    expect(getNamedArgument(args, "-i", getString)).to.be.equal(
+      "color=c=black:s=1280x720",
+    );
+    expect(args).to.be.deep.equal([]);
+  });
+
+  it('should be able to get other values from "-f lavfi -i color=c=black:s=1280x720" argument stream without changing the unrelated arguments', () => {
+    const args = [
+      "-f",
+      "lavfi",
+      "-i",
+      "color=c=black:s=1280x720",
+      "-vf",
+      "scale=1280:720",
+    ];
+    expect(getNamedArgument(args, "-vf", getString)).to.be.equal(
+      "scale=1280:720",
+    );
+    expect(getNamedArgument(args, "-f", getString)).to.be.equal("lavfi");
+    expect(getNamedArgument(args, "--fps", getString)).to.be.null;
+    expect(getNamedArgument(args, "-s", getString)).to.be.null;
+    expect(args).to.be.deep.equal(["-i", "color=c=black:s=1280x720"]);
+  });
 });
