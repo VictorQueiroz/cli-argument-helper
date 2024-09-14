@@ -25,7 +25,11 @@ export default async function simulateArguments(
       try {
         parsed = JSON.parse(chunks.join(""));
       } catch (reason) {
-        console.error(reason);
+        console.error(
+          "Failed to parse JSON due to failure:\n\t%o\n\n\t%s",
+          reason,
+          chunks.join(""),
+        );
         reject(new Error("Could not parse the arguments"));
         return;
       }
