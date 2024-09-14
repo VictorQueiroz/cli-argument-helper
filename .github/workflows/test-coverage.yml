@@ -1,4 +1,4 @@
-name: Test Coveragee
+name: Test Coverage
 
 on:
   push:
