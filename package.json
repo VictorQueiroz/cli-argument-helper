@@ -8,6 +8,7 @@
     "@types/chai": "4.x",
     "@types/chalk": "^2.2.0",
     "@types/node": "^18.18.7",
+    "c8": "^10.1.2",
     "chai": "4.x",
     "eslint": "^8.52.0",
     "nyc": "^15.1.0",
@@ -21,10 +22,11 @@
     "**/*.d.ts"
   ],
   "scripts": {
-    "prepublishOnly": "npx tsc -b . --force && npm test",
-    "test:coverage": "npx nyc npm test",
-    "test:watch": "TEST_ARGUMENTS=--watch npm run test",
-    "test": "node $TEST_ARGUMENTS --require ts-node/register --test test/index.ts"
+    "prepublishOnly": "npm run build:clean && npm test",
+    "build:clean": "npx tsc -b . --force",
+    "test:coverage": "npx c8 npm test",
+    "test:watch": "npm run test -- --watch-path test",
+    "test": "npm run build:clean && node --test test"
   },
   "dependencies": {
     "chalk": "^4.1.2"
