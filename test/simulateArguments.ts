@@ -1,54 +1,46 @@
 import { exec } from "child_process";
 import path from "path";
-import { PassThrough } from "stream";
+import which from "which";
 
 /**
  * Spawn a process that return the arguments line parsed by the shell
- * @param text Arguments line
+ * @param args Arguments line
  */
 export default async function simulateArguments(
-  text: string[] | string,
+  args: string[] | string,
 ): Promise<string[]> {
-  if (Array.isArray(text)) {
-    text = text.join(" ");
+  if (typeof args === "string") {
+    args = [args];
   }
-  const chunks = new Array<string>();
+
+  const executables = {
+    node: await which("node"),
+    shell: await which("sh"),
+  };
 
   return new Promise<string[]>((resolve, reject) => {
-    const through = new PassThrough();
-
-    through.on("data", (chunk) => {
-      chunks.push(chunk.toString());
-    });
-    through.on("end", () => {
-      let parsed: unknown;
-      try {
-        parsed = JSON.parse(chunks.join(""));
-      } catch (reason) {
-        console.error(
-          "Failed to parse JSON due to failure:\n\t%o\n\n\t%s",
-          reason,
-          chunks.join(""),
-        );
-        reject(new Error("Could not parse the arguments"));
-        return;
-      }
-      if (!Array.isArray(parsed)) {
-        reject(new Error("The parsed arguments are not an array"));
-        return;
-      }
-      resolve(parsed);
-    });
-
-    const echo = exec(`${path.resolve(__dirname, "echo.js")} ${text}`);
-    if (!echo.stdout) {
-      reject(new Error("No stdout"));
-      return;
-    }
-
-    // Pipe the stdout to the through stream
-    echo.stdout.pipe(through);
-
-    through.resume();
+    exec(
+      `${executables.node} ${path.resolve(__dirname, "echo.js")} ${args.join(
+        " ",
+      )}`,
+      {
+        shell: executables.shell,
+      },
+      (err, stdout, stderr) => {
+        if (err) {
+          reject(err);
+          return;
+        }
+        if (stderr) {
+          reject(new Error(stderr));
+          return;
+        }
+        try {
+          resolve(JSON.parse(stdout));
+        } catch (reason) {
+          reject(reason);
+        }
+      },
+    );
   });
 }
