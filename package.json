@@ -21,6 +21,10 @@
     "**/*.d.ts.map",
     "**/*.d.ts"
   ],
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:VictorQueiroz/cli-argument-helper.git"
+  },
   "scripts": {
     "prepublishOnly": "npm run build:clean && npm test",
     "build:clean": "npx tsc -b . --force",
