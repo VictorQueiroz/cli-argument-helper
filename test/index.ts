@@ -13,7 +13,7 @@ import { expect } from "chai";
 import test, { describe, it } from "node:test";
 import simulateArguments from "./simulateArguments";
 import isInteger from "../number/isInteger";
-import getBoolean from "../boolean/getBoolean";
+import getBoolean, { defaultAcceptedValues } from "../boolean/getBoolean";
 
 describe("getArgumentFromIndex", () => {
   it("should return null in case we hit the wrong index", () => {
@@ -93,6 +93,27 @@ describe("getNamedArgument", () => {
             expect(args).to.be.deep.equal([]);
           });
         }
+
+        for (const [result, acceptedValueList] of defaultAcceptedValues) {
+          if (!result) {
+            continue;
+          }
+          for (const value of acceptedValueList) {
+            it(`should return true from --props.user.id=${value} argument`, () => {
+              const args = [`--props.user.id=${value}`];
+              expect(getNamedArgument(args, "--props.user.id", getBoolean)).to
+                .be.true;
+              expect(args).to.be.deep.equal([]);
+            });
+
+            it(`should return true from \`--props.user.id ${value}\` argument`, () => {
+              const args = ["--props.user.id", value];
+              expect(getNamedArgument(args, "--props.user.id", getBoolean)).to
+                .be.true;
+              expect(args).to.be.deep.equal([]);
+            });
+          }
+        }
       });
 
       describe("false", () => {
@@ -111,6 +132,27 @@ describe("getNamedArgument", () => {
             .false;
           expect(args).to.be.deep.equal([]);
         });
+
+        for (const [result, acceptedValueList] of defaultAcceptedValues) {
+          if (result) {
+            continue;
+          }
+          for (const value of acceptedValueList) {
+            it(`should return false from --props.user.id=${value} argument`, () => {
+              const args = [`--props.user.id=${value}`];
+              expect(getNamedArgument(args, "--props.user.id", getBoolean)).to
+                .be.false;
+              expect(args).to.be.deep.equal([]);
+            });
+
+            it(`should return false from \`--props.user.id ${value}\` argument`, () => {
+              const args = ["--props.user.id", value];
+              expect(getNamedArgument(args, "--props.user.id", getBoolean)).to
+                .be.false;
+              expect(args).to.be.deep.equal([]);
+            });
+          }
+        }
       });
     });
   });
