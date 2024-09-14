@@ -1,0 +1,24 @@
+name: Build
+
+on:
+  push:
+    branches:
+      - "master"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [20.x]
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          cache: "npm"
+      - name: Install Node.js packages
+        run: npm install
+      - name: Build
+        run: npm run build:clean
