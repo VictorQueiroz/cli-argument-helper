@@ -1,0 +1,41 @@
+name: Generate documentation
+
+on:
+  push:
+    branches:
+      - "*"
+
+jobs:
+  build:
+    runs-on: ubuntu-20.04
+
+    strategy:
+      matrix:
+        node-version: [20.x]
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check out gh-pages branch
+        run: |
+          git fetch origin gh-pages
+          git checkout gh-pages
+      - uses: actions/setup-node@v4
+        with:
+          cache: "npm"
+      - name: Update packages
+        run: apt update
+      - name: Install dependencies
+        run: |
+          apt install -y --install-recommends \
+            jq rsync bash
+      - name: Install Node.js packages
+        run: npm install
+      - name: Build
+        run: npm run build:docs
+      - name: Merge master into gh-pages
+        run: |
+          git fetch origin master
+          git merge origin/master
+      - name: Push changes to gh-pages
+        run: |
+          git push origin gh-pages
