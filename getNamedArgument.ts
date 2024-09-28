@@ -1,10 +1,15 @@
-import Character from "./Character";
+import getNamedArgumentFromIndex from "./getNamedArgumentFromIndex";
 
 /**
  * Get a named argument from the argument list. For example:
  *
  * --user-id 123
  * --user-id=123
+ * 
+ * This function will iterate over the argument list until it finds the argument.
+ * if you need to test a specific index of the argument list, use `getNamedArgumentFromIndex`.
+ *
+ * This function uses `getNamedArgumentFromIndex` under the hood.
  *
  * @param args Argument list
  * @param argumentName Named argument
@@ -17,34 +22,9 @@ export default function getNamedArgument<T>(
   fn: (args: string[], index?: number) => T,
 ) {
   for (let i = 0; i < args.length; i++) {
-    const current = args[i];
-    if (typeof current === "string") {
-      /**
-       * Transform -a.b=1 to -a.b 1
-       */
-      if (
-        current
-          .substring(argumentName.length)
-          .startsWith(Character.ArgumentAssignmentOperator) &&
-        current.substring(0, argumentName.length) === argumentName
-        // && current.length > argumentName.length + Character.ArgumentAssignmentOperator.length
-      ) {
-        const arg = current.substring(0, argumentName.length);
-        const parsedValue = current.substring(
-          argumentName.length + Character.ArgumentAssignmentOperator.length,
-        );
-        args.splice(i, 1, arg, parsedValue);
-      }
-    }
-    if (args[i] === argumentName) {
-      const result = fn(args, i + 1);
-      if (result !== null) {
-        /**
-         * remove
-         */
-        args.splice(i, 1);
-        return result;
-      }
+    const result = getNamedArgumentFromIndex(i, args, argumentName, fn);
+    if (result !== null) {
+      return result;
     }
   }
   return null;

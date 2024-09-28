@@ -1,5 +1,13 @@
 import ArgumentParsingException from "./ArgumentParsingException";
 
+/**
+ * Get an argument from the argument list based on the given index.
+ * @param args List of arguments
+ * @param index Index of the argument that we're trying to get
+ * @param transform Transformation function
+ * @param validate Validation function
+ * @returns {T | null} Argument value or null if the value is not valid or not found
+ */
 export default function getArgumentFromIndex<T>(
   args: string[],
   index: number = 0,

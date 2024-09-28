@@ -1,6 +1,6 @@
 {
   "name": "cli-argument-helper",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "main": "./index.js",
   "license": "MIT",
   "devDependencies": {
@@ -31,8 +31,8 @@
     "prepublishOnly": "npm run build:clean && npm test",
     "build:clean": "npx tsc -b . --force",
     "test:coverage": "npx c8 npm test",
-    "test:watch": "npm run test -- --watch-path test",
-    "test": "npm run build:clean && node --test test"
+    "test:watch": "env NODE_POST_TEST_ARGUMENTS='--watch' NODE_ARGUMENTS='--test-reporter spec' npm run test",
+    "test": "npm run build:clean && node --trace-uncaught $NODE_ARGUMENTS --test $NODE_POST_TEST_ARGUMENTS test"
   },
   "dependencies": {
     "chalk": "^4.1.2"

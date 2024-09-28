@@ -14,6 +14,7 @@ import test, { describe, it } from "node:test";
 import simulateArguments from "./simulateArguments";
 import isInteger from "../number/isInteger";
 import getBoolean, { defaultAcceptedValues } from "../boolean/getBoolean";
+import getNamedArgumentFromIndex from "../getNamedArgumentFromIndex";
 
 describe("getArgumentFromIndex", () => {
   it("should return null in case we hit the wrong index", () => {
@@ -50,6 +51,80 @@ describe("getArgument", () => {
     expect(args).to.be.deep.equal([]);
   });
 });
+
+describe('getNamedArgumentFromIndex', () => {
+  it('should return null in case we hit the wrong index', async () => {
+    const args = await simulateArguments(['--a', '1', '--b', '2', '--user-id', '3', '--c', 'X']);
+    expect(getNamedArgumentFromIndex(0, args, '--user-id', getInteger)).to.be.null;
+    expect(getNamedArgumentFromIndex(0, args, '--a', getInteger)).to.be.equal(1);
+    expect(getNamedArgumentFromIndex(0, args, '--user-id', getInteger)).to.be.null;
+    expect(getNamedArgumentFromIndex(0, args, '--b', getInteger)).to.be.equal(2);
+    expect(getNamedArgumentFromIndex(0, args, '--user-id', getInteger)).to.be.equal(3);
+    expect(getNamedArgumentFromIndex(0, args, '--b', getInteger)).to.be.null;
+    expect(getNamedArgumentFromIndex(0, args, '--c', getInteger)).to.be.null;
+    expect(getNamedArgumentFromIndex(0, args, '--c', getString)).to.be.equal('X');
+    // Make sure the argument list is empty
+    expect(args).to.be.deep.equal([]);
+  });
+
+  it('should parse inline arguments', async () => {
+    const args = await simulateArguments(['--user-id=1','--delete=y']);
+
+    expect(getNamedArgumentFromIndex(0, args, '-x', getInteger)).to.be.null;
+    expect(getNamedArgumentFromIndex(0, args, '--user-id', getInteger)).to.be.equal(1);
+    expect(getNamedArgumentFromIndex(0, args, '--delete', getString)).to.be.equal('y');
+    // Make sure the argument list is empty
+    expect(args).to.be.deep.equal([]);
+  });
+
+  it('should parse arguments without -- or - prefixes', async () => {
+    const args = await simulateArguments(['user-id=1','delete=y']);
+
+    expect(getNamedArgumentFromIndex(0, args, '-x', getInteger)).to.be.null;
+    expect(getNamedArgumentFromIndex(0, args, 'user-id', getInteger)).to.be.equal(1);
+    expect(getNamedArgumentFromIndex(0, args, 'delete', getString)).to.be.equal('y');
+    // Make sure the argument list is empty
+    expect(args).to.be.deep.equal([]);
+  });
+
+  it('should return null in case the given index is out of bounds', async () => {
+    const args = await simulateArguments(['user-id=1','delete=y']);
+
+    expect(getNamedArgumentFromIndex(1000, args, '-x', getInteger)).to.be.null;
+
+    // Make sure the argument list is empty
+    expect(args).to.be.deep.equal(['user-id=1','delete=y']);
+  });
+
+  it('should not match the argument in case the given index is out of bounds', async () => {
+    const args = await simulateArguments(['user-id=1','delete=y']);
+
+    expect(getNamedArgumentFromIndex(1000, args, 'user-id', getInteger)).to.be.null;
+    expect(getNamedArgumentFromIndex(0, args, 'delete', getInteger)).to.be.null;
+
+    // Make sure the argument list is empty
+    expect(args).to.be.deep.equal(['user-id=1','delete=y']);
+  });
+
+  it('should throw ArgumentParsingException in case the `transform` function fails', async () => {
+    const args = await simulateArguments(['user-id=1','delete=y']);
+
+    expect(() => getNamedArgumentFromIndex(0, args, 'user-id', (_) => {
+      throw new Error('this should not be called');
+    })).to.throw(/this should not be called/);
+  })
+
+  it('should split the argument if it matches (i.e. from user-id=1 into [user-id, 1]), even if the `transform` function throws', async () => {
+    const args = await simulateArguments(['user-id=1','delete=y']);
+
+    expect(() => getNamedArgumentFromIndex(0, args, 'user-id', (_) => {
+      throw new Error('this should not be called');
+    })).to.throw(/this should not be called/);
+
+    // Make sure the argument list is intact
+    expect(args).to.be.deep.equal(['user-id','1','delete=y']);
+  })
+})
 
 describe("getNamedArgument", () => {
   it("should support clearing the argument list", () => {
