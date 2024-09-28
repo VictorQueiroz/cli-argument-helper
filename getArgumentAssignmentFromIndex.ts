@@ -1,10 +1,10 @@
 import Character from "./Character";
 
-export default function getNamedArgumentFromIndex<T>(
+export default function getArgumentAssignmentFromIndex<T>(
   index: number,
   args: string[],
   argumentName: string,
-  fn: (args: string[], index?: number) => T
+  fn: (args: string[], index: number) => T,
 ) {
   const current = args[index];
   if (typeof current !== "string") {
@@ -18,12 +18,12 @@ export default function getNamedArgumentFromIndex<T>(
       .substring(argumentName.length)
       .startsWith(Character.ArgumentAssignmentOperator) &&
     current.substring(0, argumentName.length) === argumentName
-    // && current.length > argumentName.length + Character.ArgumentAssignmentOperator.length
   ) {
     const arg = current.substring(0, argumentName.length);
     const parsedValue = current.substring(
       argumentName.length + Character.ArgumentAssignmentOperator.length,
     );
+    // TODO: Do not do this unless the argument is a match.
     args.splice(index, 1, arg, parsedValue);
   }
   // if(typeof args[index] !== 'string') {

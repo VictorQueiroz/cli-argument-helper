@@ -15,6 +15,7 @@
     "nyc": "^15.1.0",
     "prettier": "^3.0.3",
     "ts-node": "^10.9.1",
+    "typedoc": "^0.26.7",
     "typescript": "^5.5.3",
     "which": "^4.0.0"
   },
@@ -30,7 +31,9 @@
   "scripts": {
     "prepublishOnly": "npm run build:clean && npm test",
     "build:clean": "npx tsc -b . --force",
+    "build:docs": "npx typedoc --out docs --tsconfig ./tsconfig.json --entryPoints './**/*.ts' --exclude 'node_modules' --exclude './**/*.d.ts' --name cli-argument-helper",
     "test:coverage": "npx c8 npm test",
+    "docs": "git checkout gh-pages && npm run build:docs",
     "test:watch": "env NODE_POST_TEST_ARGUMENTS='--watch' NODE_ARGUMENTS='--test-reporter spec' npm run test",
     "test": "npm run build:clean && node --trace-uncaught $NODE_ARGUMENTS --test $NODE_POST_TEST_ARGUMENTS test"
   },
