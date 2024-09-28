@@ -11,7 +11,7 @@ npm i cli-argument-helper
 ## Usage
 
 ```ts
-import getNamedArgument from "cli-argument-helper/getNamedArgument";
+import getArgumentAssignment from "cli-argument-helper/getArgumentAssignment";
 import { getString } from "cli-argument-helper/string";
 import {
   getInteger,
@@ -48,37 +48,39 @@ const args = [
 ];
 
 // Get integer
-expect(getNamedArgument(args, "--user-id", getInteger)).to.be.equal(3);
-expect(getNamedArgument(args, "--b", getInteger)).to.be.equal(2);
-expect(getNamedArgument(args, "--a", getInteger)).to.be.equal(1);
+expect(getArgumentAssignment(args, "--user-id", getInteger)).to.be.equal(3);
+expect(getArgumentAssignment(args, "--b", getInteger)).to.be.equal(2);
+expect(getArgumentAssignment(args, "--a", getInteger)).to.be.equal(1);
 
 // Get plain-text string
-expect(getNamedArgument(args, "--c", getString)).to.be.equal("X");
+expect(getArgumentAssignment(args, "--c", getString)).to.be.equal("X");
 
 // Get hexadecimal number
-expect(getNamedArgument(args, "--d", getHexadecimal)).to.be.equal(0xff);
+expect(getArgumentAssignment(args, "--d", getHexadecimal)).to.be.equal(0xff);
 
 // Get octal number
-expect(getNamedArgument(args, "--e", getOctal)).to.be.equal(0o77);
+expect(getArgumentAssignment(args, "--e", getOctal)).to.be.equal(0o77);
 
 // Get binary number
-expect(getNamedArgument(args, "--f", getBinary)).to.be.equal(0b101);
+expect(getArgumentAssignment(args, "--f", getBinary)).to.be.equal(0b101);
 
 // Get float number
-expect(getNamedArgument(args, "--g", getFloat)).to.be.equal(3.14);
+expect(getArgumentAssignment(args, "--g", getFloat)).to.be.equal(3.14);
 
 // Get big integer
-expect(getNamedArgument(args, "--h", getBigInt)).to.be.equal(0x1fffffffffffffn);
+expect(getArgumentAssignment(args, "--h", getBigInt)).to.be.equal(
+  0x1fffffffffffffn,
+);
 
 // Get boolean
-expect(getNamedArgument(args, "--i", getBoolean)).to.be.equal(false);
-expect(getNamedArgument(args, "--j", getBoolean)).to.be.equal(true);
-expect(getNamedArgument(args, "--k", getBoolean)).to.be.equal(false);
-expect(getNamedArgument(args, "--l", getBoolean)).to.be.equal(true);
-expect(getNamedArgument(args, "--m", getBoolean)).to.be.equal(true);
-expect(getNamedArgument(args, "--n", getBoolean)).to.be.equal(false);
-expect(getNamedArgument(args, "--o", getBoolean)).to.be.equal(true);
-expect(getNamedArgument(args, "--p", getBoolean)).to.be.equal(false);
+expect(getArgumentAssignment(args, "--i", getBoolean)).to.be.equal(false);
+expect(getArgumentAssignment(args, "--j", getBoolean)).to.be.equal(true);
+expect(getArgumentAssignment(args, "--k", getBoolean)).to.be.equal(false);
+expect(getArgumentAssignment(args, "--l", getBoolean)).to.be.equal(true);
+expect(getArgumentAssignment(args, "--m", getBoolean)).to.be.equal(true);
+expect(getArgumentAssignment(args, "--n", getBoolean)).to.be.equal(false);
+expect(getArgumentAssignment(args, "--o", getBoolean)).to.be.equal(true);
+expect(getArgumentAssignment(args, "--p", getBoolean)).to.be.equal(false);
 
-expect(args).to.be.deep.equal([]);
+assert.strict.deepEqual(args, []);
 ```
