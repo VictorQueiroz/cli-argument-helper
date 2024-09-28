@@ -21,7 +21,7 @@ typedoc_arguments=(
 npx typedoc "${typedoc_arguments[@]}"
 
 # Move the generated documentation to the root directory
-rsync --remove-source-files -avz --progress -r ${typedoc_output_directory}/ .
+rsync --remove-source-files -avz --progress -r "${typedoc_output_directory}/" .
 
 # Remove empty directories
 find . -type d -empty -delete
