@@ -24,12 +24,12 @@ export const booleanDefaults: {
  */
 export default function getBoolean(
   args: string[],
-  index: number = 0,
+  index: number,
   acceptedValues = booleanDefaults.acceptedValues,
 ): boolean | null {
   const value = getString(args, index);
   if (value === null) {
-    return value;
+    return null;
   }
   /**
    * Check if the value matches any of the predefined values (e.g. 'on', 'off', 'true', 'false', 'y', 'n', 'yes', 'no')

@@ -22,10 +22,24 @@ export default function getArgumentFromIndex<T>(
   try {
     n = transform(a);
   } catch (reason) {
+    console.error(
+      "Failed to transform while trying to get argument from index %d: %s",
+      index,
+      a,
+    );
     throw new ArgumentParsingException(args, index, reason);
   }
-  if (!validate(n)) {
-    return null;
+  try {
+    if (!validate(n)) {
+      return null;
+    }
+  } catch (reason) {
+    console.error(
+      "Failed to validate while trying to get argument from index %d: %s",
+      index,
+      n,
+    );
+    throw new ArgumentParsingException(args, index, reason);
   }
   /**
    * Remove the argument from the list

@@ -11,8 +11,8 @@ export default function createGetNumber(
   base: number,
   validate: (value: unknown) => value is number,
   transform: ((value: string) => string) | null = null,
-): (args: string[], index?: number) => number | null {
-  return (args: string[], index = 0) =>
+): (args: string[], index: number) => number | null {
+  return (args: string[], index: number) =>
     getArgumentFromIndex(
       args,
       index,

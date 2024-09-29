@@ -1,13 +1,13 @@
 {
   "name": "cli-argument-helper",
-  "version": "1.0.8",
+  "version": "2.1.0",
   "main": "./index.js",
   "license": "MIT",
   "devDependencies": {
     "@istanbuljs/nyc-config-typescript": "^1.0.2",
     "@types/chai": "4.x",
     "@types/chalk": "^2.2.0",
-    "@types/node": "^18.18.7",
+    "@types/node": "^20.16.10",
     "@types/which": "^3.0.4",
     "c8": "^10.1.2",
     "chai": "4.x",
@@ -33,7 +33,6 @@
     "build:clean": "npx tsc -b . --force",
     "build:docs": "bash -l scripts/generate-documentation.sh",
     "test:coverage": "npx c8 npm test",
-    "docs": "npm run build:docs",
     "test:watch": "env NODE_POST_TEST_ARGUMENTS='--watch' NODE_ARGUMENTS='--test-reporter spec' npm run test",
     "test": "npm run build:clean && node --trace-uncaught $NODE_ARGUMENTS --test $NODE_POST_TEST_ARGUMENTS test"
   },

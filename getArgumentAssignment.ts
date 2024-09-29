@@ -1,3 +1,4 @@
+import { CreateResultFn } from "./assignmentValueFromIndex";
 import getArgumentAssignmentFromIndex from "./getArgumentAssignmentFromIndex";
 
 /**
@@ -19,10 +20,10 @@ import getArgumentAssignmentFromIndex from "./getArgumentAssignmentFromIndex";
 export default function getArgumentAssignment<T>(
   args: string[],
   argumentName: string,
-  fn: (args: string[], index?: number) => T,
-) {
+  fn: CreateResultFn<T>,
+): T | null {
   for (let i = 0; i < args.length; i++) {
-    const result = getArgumentAssignmentFromIndex(i, args, argumentName, fn);
+    const result = getArgumentAssignmentFromIndex(args, i, argumentName, fn);
     if (result !== null) {
       return result;
     }

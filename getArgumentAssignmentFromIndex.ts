@@ -1,18 +1,21 @@
+import assignmentValueFromIndex, {
+  CreateResultFn,
+} from "./assignmentValueFromIndex";
 import Character from "./Character";
 
 export default function getArgumentAssignmentFromIndex<T>(
-  index: number,
   args: string[],
+  index: number,
   argumentName: string,
-  fn: (args: string[], index: number) => T,
-) {
+  createResult: CreateResultFn<T>,
+): T | null {
   const current = args[index];
   if (typeof current !== "string") {
     return null;
   }
-  /**
-   * Transform -a.b=1 to -a.b 1
-   */
+
+  const argumentListClone = Array.from(args);
+
   if (
     current
       .substring(argumentName.length)
@@ -23,21 +26,44 @@ export default function getArgumentAssignmentFromIndex<T>(
     const parsedValue = current.substring(
       argumentName.length + Character.ArgumentAssignmentOperator.length,
     );
-    // TODO: Do not do this unless the argument is a match.
-    args.splice(index, 1, arg, parsedValue);
-  }
-  // if(typeof args[index] !== 'string') {
-  //   throw new ArgumentParsingException(args, index, `Expected that the value after ${argumentName} to be a string`);
-  // }
-  if (args[index] === argumentName) {
-    const result = fn(args, index + 1);
+
+    // Remove the single-argument assignment, and add the split argument name and value
+    /**
+     * Transform -a.b=1 to -a.b 1 within the list clone
+     */
+    argumentListClone.splice(index, 1, arg, parsedValue);
+
+    const result = assignmentValueFromIndex(
+      argumentListClone,
+      index + 1,
+      createResult,
+    );
+
     if (result !== null) {
-      /**
-       * Remove the argument value
-       */
+      // Since it's a matching argument, remove the argument value at the given index
       args.splice(index, 1);
       return result;
     }
   }
-  return null;
+
+  // If the argument name does not match, return null
+  if (current !== argumentName) {
+    return null;
+  }
+
+  const result = assignmentValueFromIndex(
+    argumentListClone,
+    index + 1,
+    createResult,
+  );
+
+  if (result === null) {
+    return result;
+  }
+
+  // Since it's a matching argument, remove the argument name and argument value at the given index
+  args.splice(index, 2);
+
+  // Return the result
+  return result;
 }
