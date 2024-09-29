@@ -23,10 +23,10 @@ jobs:
         with:
           cache: "npm"
       - name: Update packages
-        run: apt update
+        run: sudo apt update
       - name: Install dependencies
         run: |
-          apt install -y --install-recommends \
+          sudo apt install -y --install-recommends \
             jq rsync bash
       - name: Install Node.js packages
         run: npm install
