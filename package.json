@@ -1,6 +1,6 @@
 {
   "name": "cli-argument-helper",
-  "version": "2.1.0",
+  "version": "2.2.0",
   "main": "./index.js",
   "license": "MIT",
   "devDependencies": {
@@ -11,13 +11,13 @@
     "@types/which": "^3.0.4",
     "c8": "^10.1.2",
     "chai": "4.x",
+    "child-process-utilities": "^0.1.8",
     "eslint": "^8.52.0",
     "nyc": "^15.1.0",
     "prettier": "^3.0.3",
     "ts-node": "^10.9.1",
     "typedoc": "^0.26.7",
-    "typescript": "^5.5.3",
-    "which": "^4.0.0"
+    "typescript": "^5.5.3"
   },
   "files": [
     "**/*.js",

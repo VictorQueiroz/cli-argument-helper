@@ -19,6 +19,7 @@ import getBooleanArgumentFromIndex from "../getBooleanArgumentFromIndex";
 import assert from "assert";
 import getCompileLanguageOptions from "./getCompileLanguageOptions";
 import anyOfArgumentAssignment from "../anyOfArgumentAssignment";
+import getJSON from "../json/getJSON";
 
 describe("getArgumentFromIndex", () => {
   it("should return null in case we hit the wrong index", () => {
@@ -40,6 +41,37 @@ describe("simulateArguments", () => {
   it("should return the arguments line parsed by the shell", async () => {
     const args = ["--a", "1", "--b", "2", "--user-id", "3", "--c", "X"];
     expect(await simulateArguments(args)).to.be.deep.equal(args);
+  });
+});
+
+describe("getJSON", () => {
+  it("should parse JSON", async () => {
+    const args = await simulateArguments(["--json", '{"a": 1, "b": 2}']);
+    assert.strict.deepEqual(getArgumentAssignment(args, "--json", getJSON), {
+      a: 1,
+      b: 2,
+    });
+    assert.strict.deepEqual(args, []);
+  });
+
+  it("should get a bare number", async () => {
+    const args = await simulateArguments(["--json", "1"]);
+    assert.strict.equal(getArgumentAssignment(args, "--json", getJSON), 1);
+    assert.strict.deepEqual(args, []);
+  });
+
+  it("should return null if it is an invalid JSON string", async () => {
+    const args = await simulateArguments(["--json", "{ value: undefined }"]);
+    const expectedArgs = Array.from(args);
+    assert.strict.equal(getArgumentAssignment(args, "--json", getJSON), null);
+    assert.strict.deepEqual(args, expectedArgs);
+  });
+
+  it("should return null if there isn't any JSON value", async () => {
+    const args = await simulateArguments(["--json"]);
+    const expectedArgs = Array.from(args);
+    assert.strict.equal(getArgumentAssignment(args, "--json", getJSON), null);
+    assert.strict.deepEqual(args, expectedArgs);
   });
 });
 
@@ -400,7 +432,7 @@ describe("getNamedArgument", () => {
   describe("number", () => {
     describe("getHexadecimal", () => {
       it("should get hexadecimal from --user.id 0x30000", async () => {
-        const args = await simulateArguments('--user.id="0x30000"');
+        const args = await simulateArguments(["--user.id=0x30000"]);
         expect(
           getArgumentAssignment(args, "--user.id", getHexadecimal),
         ).to.be.equal(0x30000);
@@ -408,7 +440,7 @@ describe("getNamedArgument", () => {
       });
 
       it("should get hexadecimal from --user.id 0x30000", async () => {
-        const args = await simulateArguments("--user.id 0x30000");
+        const args = await simulateArguments(["--user.id", "0x30000"]);
         expect(
           getArgumentAssignment(args, "--user.id", getHexadecimal),
         ).to.be.equal(0x30000);
@@ -418,7 +450,7 @@ describe("getNamedArgument", () => {
 
     describe("getFloat", () => {
       it("should get float from --user.id 0.3", async () => {
-        const args = await simulateArguments("--user.id 0.3");
+        const args = await simulateArguments(["--user.id", "0.3"]);
         expect(getArgumentAssignment(args, "--user.id", getFloat)).to.be.equal(
           0.3,
         );
@@ -426,7 +458,7 @@ describe("getNamedArgument", () => {
       });
 
       test(`it should get float from --user.id ${Math.PI}`, async () => {
-        const args = await simulateArguments(`--user.id '${Math.PI}'`);
+        const args = await simulateArguments([`--user.id`, `${Math.PI}`]);
         expect(getArgumentAssignment(args, "--user.id", getFloat)).to.be.equal(
           Math.PI,
         );
@@ -435,7 +467,7 @@ describe("getNamedArgument", () => {
     });
     describe("getOctal", () => {
       it("should get octal from --user.id 0o30000", async () => {
-        const args = await simulateArguments("--user.id 0o30000");
+        const args = await simulateArguments(["--user.id", "0o30000"]);
         expect(getArgumentAssignment(args, "--user.id", getOctal)).to.be.equal(
           0o30000,
         );
@@ -445,7 +477,7 @@ describe("getNamedArgument", () => {
 
     describe("getBinary", () => {
       it("should get binary from --user.id 0b110", async () => {
-        const args = await simulateArguments("--user.id 0b110");
+        const args = await simulateArguments(["--user.id", "0b110"]);
         expect(getArgumentAssignment(args, "--user.id", getBinary)).to.be.equal(
           0b110,
         );
@@ -524,7 +556,7 @@ describe("getNamedArgument", () => {
       );
       expect(
         getArgumentAssignment(
-          await simulateArguments(["--suffix", "'$user-$name-$test'"]),
+          await simulateArguments(["--suffix", "$user-$name-$test"]),
           "--suffix",
           getString,
         ),
@@ -540,7 +572,7 @@ describe("getNamedArgument", () => {
     });
 
     it("should get --user.id=1", async () => {
-      const args = await simulateArguments("--user.id=1");
+      const args = await simulateArguments(["--user.id=1"]);
       expect(getArgumentAssignment(args, "--user.id", getString)).to.be.equal(
         "1",
       );
@@ -548,7 +580,7 @@ describe("getNamedArgument", () => {
     });
 
     test('it should get --user.id="1"', async () => {
-      const args = await simulateArguments('--user.id="1"');
+      const args = await simulateArguments(["--user.id=1"]);
       expect(getArgumentAssignment(args, "--user.id", getString)).to.be.equal(
         "1",
       );
