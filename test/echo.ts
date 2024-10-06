@@ -28,5 +28,5 @@ async function writeArguments() {
   }
 })().catch((reason) => {
   console.error(reason);
-  process.exit(1);
+  process.exitCode = 1;
 });

@@ -1,6 +1,6 @@
 import getArgumentFromIndex from "../getArgumentFromIndex";
 
-export function getString(args: string[], index: number = 0): string | null {
+export function getString(args: string[], index: number): string | null {
   return getArgumentFromIndex<string>(
     args,
     index,

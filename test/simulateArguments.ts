@@ -1,46 +1,34 @@
-import { exec } from "child_process";
+import { spawn } from "child-process-utilities";
 import path from "path";
-import which from "which";
 
 /**
  * Spawn a process that return the arguments line parsed by the shell
  * @param args Arguments line
  */
 export default async function simulateArguments(
+  args: string[],
+): Promise<string[]>;
+/**
+ * Spawn a process that return the arguments line parsed by the shell
+ * @param args Arguments line
+ * @returns The arguments line parsed by the shell
+ * @deprecated Pass an array to `args` instead
+ */
+export default async function simulateArguments(
+  args: string,
+): Promise<string[]>;
+export default async function simulateArguments(
   args: string[] | string,
 ): Promise<string[]> {
   if (typeof args === "string") {
-    args = [args];
+    args = args.split(" ");
   }
 
-  const executables = {
-    node: await which("node"),
-    shell: await which("sh"),
-  };
+  const result = await spawn
+    .pipe("node", [path.resolve(__dirname, "echo.js"), ...args])
+    .output()
+    .stdout()
+    .json<string[]>();
 
-  return new Promise<string[]>((resolve, reject) => {
-    exec(
-      `${executables.node} ${path.resolve(__dirname, "echo.js")} ${args.join(
-        " ",
-      )}`,
-      {
-        shell: executables.shell,
-      },
-      (err, stdout, stderr) => {
-        if (err) {
-          reject(err);
-          return;
-        }
-        if (stderr) {
-          reject(new Error(stderr));
-          return;
-        }
-        try {
-          resolve(JSON.parse(stdout));
-        } catch (reason) {
-          reject(reason);
-        }
-      },
-    );
-  });
+  return result;
 }
