@@ -6,7 +6,7 @@ import { getString } from "../string";
  * @param index Index of the argument to take as a JSON object
  * @returns JSON object or null if the value is not a JSON object
  */
-export default function getJSON<T extends Record<string, unknown>>(
+export default function getJSON<T = unknown>(
   args: string[],
   index: number,
 ): T | null {
