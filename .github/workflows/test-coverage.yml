@@ -1,9 +1,14 @@
 name: Test Coverage
 
 on:
+  workflow_dispatch:
+  pull_request:
+    types: [opened, edited, reopened, synchronize]
+    branches:
+      - '**'
   push:
     branches:
-      - "master"
+      - '**'
 
 jobs:
   build:

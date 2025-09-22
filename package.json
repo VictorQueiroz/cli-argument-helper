@@ -16,7 +16,7 @@
     "nyc": "^15.1.0",
     "prettier": "^3.0.3",
     "ts-node": "^10.9.1",
-    "typedoc": "^0.26.7",
+    "typedoc": "^0.28.13",
     "typescript": "^5.5.3"
   },
   "files": [
@@ -28,10 +28,13 @@
     "type": "git",
     "url": "git@github.com:VictorQueiroz/cli-argument-helper.git"
   },
+  "engines": {
+    "node": ">=20.17"
+  },
   "scripts": {
     "prepublishOnly": "npm run build:clean && npm test",
     "build:clean": "npx tsc -b . --force",
-    "build:docs": "npx typedoc --out docs --tsconfig ./tsconfig.json --entryPoints './**/*.ts' --exclude 'node_modules' --exclude './**/*.d.ts' --name cli-argument-helper",
+    "build:docs": "npx typedoc",
     "test:coverage": "npx c8 npm test",
     "test:watch": "env NODE_POST_TEST_ARGUMENTS='--watch' NODE_ARGUMENTS='--test-reporter spec' npm run test",
     "test": "npm run build:clean && node --trace-uncaught $NODE_ARGUMENTS --test $NODE_POST_TEST_ARGUMENTS test"
