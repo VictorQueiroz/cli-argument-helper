@@ -1,9 +1,6 @@
 {
   "extends": "@istanbuljs/nyc-config-typescript",
   "all": true,
-  "include":[
-    "test/index.ts",
-    "index.ts"
-  ],
+  "include": ["test/index.ts", "index.ts"],
   "check-coverage": true
 }
