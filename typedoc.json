@@ -1,0 +1,30 @@
+{
+  "$schema": "https://typedoc.org/schema.json",
+  "entryPoints": [
+    "./index.ts",
+    "./getArgumentAssignment.ts",
+    "./getArgumentAssignmentFromIndex.ts",
+    "./getArgumentFromIndex.ts",
+    "./getBooleanArgumentFromIndex.ts",
+    "./boolean/getBoolean.ts",
+    "./number/index.ts",
+    "./string/index.ts",
+    "./json/getJSON.ts"
+  ],
+  "out": "docs",
+  "name": "cli-argument-helper",
+  "readme": "README.md",
+  "theme": "default",
+  "includeVersion": true,
+  "excludeExternals": true,
+  "excludePrivate": true,
+  "excludeProtected": true,
+  "hideGenerator": false,
+  "gitRevision": "master",
+  "disableSources": false,
+  "sourceLinkTemplate": "https://github.com/VictorQueiroz/cli-argument-helper/blob/{gitRevision}/{path}#L{line}",
+  "navigation": {
+    "includeCategories": true,
+    "includeGroups": true
+  }
+}
