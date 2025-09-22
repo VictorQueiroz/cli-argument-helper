@@ -16,7 +16,7 @@
     "nyc": "^15.1.0",
     "prettier": "^3.0.3",
     "ts-node": "^10.9.1",
-    "typedoc": "^0.26.7",
+    "typedoc": "^0.28.13",
     "typescript": "^5.5.3"
   },
   "files": [
@@ -27,6 +27,9 @@
   "repository": {
     "type": "git",
     "url": "git@github.com:VictorQueiroz/cli-argument-helper.git"
+  },
+  "engines": {
+    "node": ">=20.17"
   },
   "scripts": {
     "prepublishOnly": "npm run build:clean && npm test",

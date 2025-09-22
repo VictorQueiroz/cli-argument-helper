@@ -1,15 +1,11 @@
 {
   "$schema": "https://typedoc.org/schema.json",
   "entryPoints": [
-    "./index.ts",
-    "./getArgumentAssignment.ts",
-    "./getArgumentAssignmentFromIndex.ts",
-    "./getArgumentFromIndex.ts",
-    "./getBooleanArgumentFromIndex.ts",
-    "./boolean/getBoolean.ts",
-    "./number/index.ts",
-    "./string/index.ts",
-    "./json/getJSON.ts"
+    "./*.ts",
+    "./boolean/**/*.ts",
+    "./number/**/*.ts",
+    "./string/**/*.ts",
+    "./json/**/*.ts"
   ],
   "out": "docs",
   "name": "cli-argument-helper",
